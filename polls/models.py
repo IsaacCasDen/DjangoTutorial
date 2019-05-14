@@ -12,7 +12,12 @@ class Question(models.Model):
         return self.question_text
 
     def is_recent(self):
-        return self.pub_date>=timezone.now()-datetime.timedelta(days=1)
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+
+    is_recent.admin_order_field = 'pub_date'
+    is_recent.boolean = True
+    is_recent.short_description = 'Published Recently'
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
